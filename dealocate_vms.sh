@@ -11,11 +11,11 @@
 #################################################################################
 
 # Exclude VM
-vmexcept=nmazjb
-#sID="<your subscription id here>"
+vmexcept=<vm name to exclude from script>
+sID="<your subscription id here>"
 
 # Set subscriptionID:
-#az account set --subscription $sID
+az account set --subscription $sID
 
 # List all resource groups
 declare -a rgarray="$(az group list  --query '[].name' -o tsv)"
