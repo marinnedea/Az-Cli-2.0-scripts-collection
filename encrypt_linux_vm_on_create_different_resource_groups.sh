@@ -15,20 +15,20 @@
 #############################
 
 # Define VM variables
-rgname="adedatadisksrg7"
-VMName="testade7"
-loc="westeurope"
-vm_user="nedmar"
+rgname="resource_group_name"
+VMName="vm_name_here"
+loc="azure_region_here"
+vm_user="your_username"
 
 # Define the name of the KeyVault and its Resource Group name that will be created.
-keyvault_name="testencdatadisk7"
-KVRG="testencddrg7"
+keyvault_name="key vault name"
+KVRG="key vsault resource group name"
 
 # Define the name of the Service Principal that will be created.
-SPName="testencddsp7"
+SPName="SP name"
 
 # Define the name of the KEK
-KVKeyName="testadeddkek7"
+KVKeyName="Key name"
 
 # Create VM RG
 az group create --name $rgname --location $loc
