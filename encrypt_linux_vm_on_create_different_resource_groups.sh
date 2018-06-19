@@ -22,7 +22,7 @@ vm_user="your_username"
 
 # Define the name of the KeyVault and its Resource Group name that will be created.
 keyvault_name="key vault name"
-KVRG="key vsault resource group name"
+KVRG="key vault resource group name"
 
 # Define the name of the Service Principal that will be created.
 SPName="SP name"
@@ -81,7 +81,7 @@ az vm encryption enable --resource-group $rgname --name $VMName --aad-client-id 
 fi
 
 # Check encryption
-while [ $(az vm encryption show --resource-group $rgname --name $VMName --query "dataDisk" -o tsv) != "Encrypted" ]
+while [[ "$(az vm encryption show --resource-group $rgname --name $VMName --query "dataDisk" -o tsv)" != "Encrypted" ]]
 do
 	echo "Disk is not encrypted yet."
 	sleep 180
