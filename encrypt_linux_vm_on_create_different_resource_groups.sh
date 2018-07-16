@@ -36,21 +36,6 @@ az group create --name $rgname --location $loc
 # Create the VM
 az vm create -g $rgname -n $VMName --image rhel --admin-username $vm_user --generate-ssh-keys
 
-# Let"s check first the status of the VM
-az vm show -g $rgname -n $VMName -d
-
-# Attach a data disk to the VM
-az vm disk attach -g $rgname --vm-name $VMName --disk myDataDisk --new --size-gb 50
-
-# Format and mount the disk
-az vm extension set -g $rgname --vm-name $VMName  --name customScript --publisher Microsoft.Azure.Extensions --protected-settings '{"fileUris": ["https://gist.githubusercontent.com/marinnedea/b9e6621ee072af34f891ba9ce0a485d5/raw/700fa2572d49cf8bda7e7f7c84a0fe7c7a77a15d/diskutils.sh"],"commandToExecute": "sh diskutils.sh"}'
-
-read -p "Shall we continue? (y/n) " qcont
-
-if [ "$qcont" = "n" ] ; then 
- exit 
-else
- 
 # If not already done, registre KV provider and then check if already existing
 az provider register -n Microsoft.KeyVault
 az provider show -n Microsoft.KeyVault
@@ -77,12 +62,4 @@ pw="$( echo $appandpass | awk '{print $2}')"
 az keyvault set-policy --name $keyvault_name --spn $aadClientID --key-permissions wrapKey --secret-permissions set
 
 # Now, enable the encryption - This enable for "All" the disks
-az vm encryption enable --resource-group $rgname --name $VMName --aad-client-id $aadClientID --aad-client-secret $pw --key-encryption-keyvault $KEKV --key-encryption-key $KEKUri --disk-encryption-keyvault $KEKV --volume-type DATA --encrypt-format-all
-fi
-
-# Check encryption
-while [[ "$(az vm encryption show --resource-group $rgname --name $VMName --query "dataDisk" -o tsv)" != "Encrypted" ]]
-do
-	echo "Disk is not encrypted yet."
-	sleep 180
-done
+az vm encryption enable --resource-group $rgname --name $VMName --aad-client-id $aadClientID --aad-client-secret $pw --key-encryption-keyvault $KEKV --key-encryption-key $KEKUri --disk-encryption-keyvault $KEKV --volume-type ALL
