@@ -5,7 +5,7 @@
 #		Make sure the script has executable permissions:
 #		chmod +x oms_install_all_VMs_in_subscription.sh
 #		execute the script by typing:  ./oms_install_all_VMs_in_subscription.sh
-##########################################################################################
+# Requires	AzCli 2.0 to run: https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest
 
 # variables
 omsid=<Workspace ID here>
