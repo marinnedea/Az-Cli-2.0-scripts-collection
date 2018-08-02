@@ -6,7 +6,7 @@
 # Created: 	March 19th, 2018									#
 # Usage:  	Change the variables to your own. 							#
 #		Make sure the script has executable permissions:					#
-#		chmod +x deallocate_vms.sh and execute the script by typing:  ./deallocate_vms.sh	#					#
+#		chmod +x deallocate_vms.sh and execute the script by typing:  ./deallocate_vms.sh	#
 # Requires:	AzCli 2.0 installed on the machine you're running this script on			#
 # 		https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest	#
 # 		If enabled, you can run it through the bash Cloud Shell in your Azure Portal page.	#
