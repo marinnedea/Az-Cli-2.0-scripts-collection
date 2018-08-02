@@ -2,10 +2,10 @@
 # Title:  	Oms Install on all VMs in subscription
 # Author: 	Marin Nedea 
 # Usage:  	Change the variables to your own. 
-#			Make sure the script has executable permissions:
-#			chmod +x oms_install_all_VMs_in_subscription.sh
-#			execute the script by typing:  ./oms_install_all_VMs_in_subscription.sh
-####################################################################################
+#		Make sure the script has executable permissions:
+#		chmod +x oms_install_all_VMs_in_subscription.sh
+#		execute the script by typing:  ./oms_install_all_VMs_in_subscription.sh
+##########################################################################################
 
 # variables
 omsid=<Workspace ID here>
