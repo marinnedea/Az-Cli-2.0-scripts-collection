@@ -2,10 +2,10 @@
 # Title:  	Oms Install on all VMs in specific RG
 # Author: 	Marin Nedea 
 # Usage:  	Change the variables to your own. 
-#			Make sure the script has executable permissions:
-#			chmod +x oms_install_all_vms_in_specific_RG.sh
-#			execute the script by typing:  ./oms_install_all_vms_in_specific_RG.sh
-##################################################################################
+#		Make sure the script has executable permissions:
+#		chmod +x oms_install_all_vms_in_specific_RG.sh
+#		execute the script by typing:  ./oms_install_all_vms_in_specific_RG.sh
+# Requires 	AzCli 2.0 to run: https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest
 
 # Declare the variables
 omsid=<Workspace ID here>
