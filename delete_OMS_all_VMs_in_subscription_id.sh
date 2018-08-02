@@ -15,7 +15,7 @@
 # Requires:	AzCli 2.0 installed on the machine you're running this script on			#
 # 		https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest	#
 # 		If enabled, you can run it through the bash Cloud Shell in your Azure Portal page.	#
-# NOTE:		You can remove all the echo's if you feel the script is too large. Your choice!		#
+# NOTE:	You can remove all the echo's if you feel the script is too large. Your choice!		#
 ########################################################################################################
 
 # Create an array with the available subscriptions IDs
