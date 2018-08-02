@@ -1,18 +1,18 @@
 #! /usr/bin/env bash
 
 ########################################################################################################
-# Title:        Remove OMS from all VMs in a specific subscription ID					#
-# Author:       Marin Nedea 										#
-# Created:	March 19th, 2018									#
-# Requires: 	AzCli 2.0 must be already installed and running (logged in).				#
-#		bash (not sh). sh doesn't understand arrays, so you'll have to run this in bash		#
-#		There is a slight possibility you will need dos2unix utility also. See below.		#
-# Usage:        Make sure the script has executable permissions:					#
-#               chmod +x delete_OMS_all_VMs_in_subscription_id.sh 					#
-#               Execute the script by typing:  ./delete_OMS_all_VMs_in_subscription_id.sh		#
-#		Sometimes git will break the "unix" format of the file.					#
-#		To restore it, just run dos2unix delete_OMS_all_VMs_in_subscription_id.sh		#
-# NOTE:	You can remove all the echo's if you feel the script is too large. Your choice!		#
+# Title:        Remove OMS from all VMs in a specific subscription ID                                   #
+# Author:       Marin Nedea                                                                             #
+# Created:      March 19th, 2018                                                                        #
+# Requires:     AzCli 2.0 must be already installed and running (logged in).                            #
+#               bash (not sh). sh doesn't understand arrays, so you'll have to run this in bash         #
+#               There is a slight possibility you will need dos2unix utility also. See below.           #
+# Usage:        Make sure the script has executable permissions:                                        #
+#               chmod +x delete_OMS_all_VMs_in_subscription_id.sh                                       #
+#               Execute the script by typing:  ./delete_OMS_all_VMs_in_subscription_id.sh               #
+#               Sometimes git will break the "unix" format of the file.                                 #
+#               To restore it, just run dos2unix delete_OMS_all_VMs_in_subscription_id.sh               #
+# NOTE:         You can remove all the echo's if you feel the script is too large. Your choice!         #
 ########################################################################################################
 
 # Create an array with the available subscriptions IDs
