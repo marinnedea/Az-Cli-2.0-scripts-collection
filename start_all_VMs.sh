@@ -2,10 +2,10 @@
 # Title:  	Start all VMs in subscription ID
 # Author: 	Marin Nedea
 # Usage:  	Change the variables to your own. 
-#			Make sure the script has executable permissions:
-#			chmod +x start_all_VMs.sh
-#			execute the script by typing:  ./start_all_VMs.sh
-#############################################################
+#		Make sure the script has executable permissions:
+#		chmod +x start_all_VMs.sh
+#		execute the script by typing:  ./start_all_VMs.sh
+# Requires	AzCli 2.0 to run: https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest
 
 
 # Declare the variables
