@@ -1,16 +1,16 @@
 #! /usr/bin/env bash
 #################################################################################################
-# Author:       Marin Nedea									                                    #
-# Created:	    March 19th, 2018								                                #
-# Requirements: AzCli 2.0 must be already installed and running (logged in).			        #
-#		        bash (not sh). sh doesn't understand arrays, so you'll have to run this in bash	#
-#		        There is a slight possibility you will need dos2unix utility also. See below.	#
-# Usage:        Make sure the script has executable permissions:				                #
-#               chmod +x encrypt_vm.sh								                            #
-#               Execute the script by typing:  ./encrypt_vm.sh					                #
-#		        Sometimes git will break the "unix" format of the file.				            #
-#		        To restore it, just run dos2unix encrypt_vm.sh					                #
-# NOTE:		    You can remove all the echo's if you feel the script is too large. Your choice!	#
+# Author:       Marin Nedea                                                                     #
+# Created:      March 19th, 2018                                                                #
+# Requirements: AzCli 2.0 must be already installed and running (logged in).                    #
+#               bash (not sh). sh doesn't understand arrays, so you'll have to run this in bash #
+#               There is a slight possibility you will need dos2unix utility also. See below.   #
+# Usage:        Make sure the script has executable permissions:                                #
+#               chmod +x encrypt_vm.sh                                                          #
+#               Execute the script by typing:  ./encrypt_vm.sh                                  #
+#               Sometimes git will break the "unix" format of the file.                         #
+#               To restore it, just run dos2unix encrypt_vm.sh.                                 #
+# NOTE:         You can remove all the echo's if you feel the script is too large. Your choice! #
 #################################################################################################
 
 
