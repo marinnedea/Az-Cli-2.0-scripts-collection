@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
+# Author: Marin Nedea
 # The script will create all needed resources to 
 # deploy a Linux VM in a RG and encrypt it with
 # a KEK created into a different resource group
-# Working version.
+# Requires AzCli 2.0 to run: https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest
 
 #############################
 # Optional
