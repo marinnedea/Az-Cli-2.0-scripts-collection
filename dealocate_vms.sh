@@ -1,14 +1,16 @@
-#! /usr/bin/env bash
+ #! /usr/bin/env bash
 
-#################################################################################
-# Title:  	Deallocate all VMs in subscription except a specific one	#
-# Author: 	Marin Nedea							#
-# Created: 	March 19th, 2018
-# Usage:  	Change the variables to your own. 				#
-#		Make sure the script has executable permissions:		#
-#		chmod +x deallocate_vms.sh					#
-#		execute the script by typing:  ./deallocate_vms.sh		#
-#################################################################################
+#########################################################################################################
+# Title:  	Deallocate all VMs in subscription except a specific one				#
+# Author: 	Marin Nedea										#
+# Created: 	March 19th, 2018									#
+# Usage:  	Change the variables to your own. 							#
+#		Make sure the script has executable permissions:					#
+#		chmod +x deallocate_vms.sh and execute the script by typing:  ./deallocate_vms.sh	#					#
+# Requires:	AzCli 2.0 installed on the machine you're running this script on			#
+# 		https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest	#
+# 		If enabled, you can run it through the bash Cloud Shell in your Azure Portal page.	#
+#########################################################################################################
 
 # Exclude VM
 vmexcept=<vm name to exclude from script>
