@@ -2,7 +2,7 @@
 
 ########################################################################################################
 # Title:        Remove OMS from all VMs in a specific subscription ID					#
-# Author:       Marin Nedea										#
+# Author:       Marin Nedea 										#
 # Created:	March 19th, 2018									#
 # Requirements: AzCli 2.0 must be already installed and running (logged in).				#
 #		bash (not sh). sh doesn't understand arrays, so you'll have to run this in bash		#
