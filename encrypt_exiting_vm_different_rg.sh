@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 #  Encrypt an existing VM with a KEK into a different RG
+# Requires AzCli 2.0 installed on the machine you're running this script from:
+# https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest
+# If enabled, you can run it through the bash Cloud Shell in your Azure Portal page.
 # Working version.
 
 #############################
