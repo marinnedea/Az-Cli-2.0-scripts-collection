@@ -2,11 +2,11 @@
 # Title:  	Oms Install on multiple predefined VMs in the same RG
 # Author: 	Marin Nedea 
 # Usage:  	Change the variables to your own. 
-#			Make sure the script has executable permissions:
-#			chmod +x oms_install_multiple_MVs.sh
-#			Change myVM1 myVM2 myVM3  myVM5 myVM25 in the $vmarray with actual VM names.
-#			execute the script by typing:  ./oms_install_multiple_MVs.sh
-########################################################################################
+#		Make sure the script has executable permissions:
+#		chmod +x oms_install_multiple_MVs.sh
+#		Change myVM1 myVM2 myVM3  myVM5 myVM25 in the $vmarray with actual VM names.
+#		execute the script by typing:  ./oms_install_multiple_MVs.sh
+# Requires 	AzCli 2.0 to run: https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest
 
 
 # Declare the variables
