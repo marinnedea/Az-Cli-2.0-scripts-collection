@@ -246,7 +246,7 @@ scan_partition_format()
 	    MOUNTPOINT=$(get_next_mountpoint)
 	    echo "Next mount point appears to be ${MOUNTPOINT}"
 	    [ -d "${MOUNTPOINT}" ] || mkdir -p "${MOUNTPOINT}"
-	    read UUID FS_TYPE <<< (blkid -u filesystem ${PARTITION}|awk -F "[= ]" '{print $3" "$5}'|tr -d "\"")
+	    read UUID FS_TYPE <<< $(blkid -u filesystem ${PARTITION}|awk -F "[= ]" '{print $3" "$5}'|tr -d "\"")
 	    add_to_fstab "${UUID}" "${MOUNTPOINT}"
 	    echo "Mounting disk ${PARTITION} on ${MOUNTPOINT}"
 	    mount "${MOUNTPOINT}"
