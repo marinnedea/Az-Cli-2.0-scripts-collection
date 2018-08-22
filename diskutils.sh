@@ -297,7 +297,7 @@ create_striped_volume()
 
 	mkfs.ext4 -b 4096 -E stride=${STRIDE},stripe-width=${STRIPEWIDTH},nodiscard "${MDDEVICE}"
 
-	read UUID FS_TYPE <<<(blkid -u filesystem ${MDDEVICE}|awk -F "[= ]" '{print $3" "$5}'|tr -d "\"")
+	read UUID FS_TYPE <<<$(blkid -u filesystem ${MDDEVICE}|awk -F "[= ]" '{print $3" "$5}'|tr -d "\"")
 
 	add_to_fstab "${UUID}" "${MOUNTPOINT}"
 
