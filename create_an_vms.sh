@@ -4,8 +4,6 @@
 # https://docs.microsoft.com/en-us/azure/virtual-network/create-vm-accelerated-networking-cli#supported-operating-systems 
 # Requires az cli v2.x
 
-
-
 #############################
 # Optional
 # Login into Azure
