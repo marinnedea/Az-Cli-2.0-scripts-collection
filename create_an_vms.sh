@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# Creates 1 VM for each supported distribution and enables Accelerated Networking on it:
+# https://docs.microsoft.com/en-us/azure/virtual-network/create-vm-accelerated-networking-cli#supported-operating-systems 
+# Requires az cli v2.x
+
+
+
 #############################
 # Optional
 # Login into Azure
@@ -11,14 +17,19 @@
 #############################
 
 # Decide on a region for the resources to be created
-region="Set_region_here"
+region="Set_Region_Here"
 
 # Set a resource group name and create it
-rgName="antestrg1"
+rgName="Set_Resource_Group_Here"
 az group create --name $rgName --location $region
 
 # Use a specific username
 userName="azureuser"
+
+# Set the VM size. Check you quota for a specific region before selecting the VM size, but also the suported VM size for AN.
+# Take into consideration this script will create 8 VMs, each the same size. 
+# If you set a VM size that will create, let's say. 8vCPUs VMs, you'll use 84 vCPUs from your quota in the selected region.
+vmsize="Standard_DS4_v2"
 
 # Set the network parametters:
 ANVnet="myANVnet"
@@ -52,14 +63,11 @@ vms[7]='OracleRHCKAN1;Oracle:Oracle-Linux:7.4:7.4.20180424;8'
 
 for i in "${vms[@]}"
 do
-
         arr=(${i//;/ })
         vmName=${arr[0]}
         vmImage=${arr[1]}
         c=${arr[2]}
-#echo $vmName;
-#echo $vmImage;
-#echo "$c"
+
 # Create a public IP address with az network public-ip create.
 # A public IP address isn't required if you don't plan to access the virtual machine from the Internet, so you may skip this step.
 az network public-ip create --name ANPubIp$c -g $rgName
@@ -68,6 +76,6 @@ az network public-ip create --name ANPubIp$c -g $rgName
 az network nic create  -g $rgName --name ANNic$c --vnet-name $ANVnet --subnet $ANSubnet --accelerated-networking true --public-ip-address ANPubIp$c --network-security-group $ANNSG
 
 # Create the VM and attach the NIC you just created to the VM:
-az vm create -g $rgName -n $vmName --image $vmImage --size Standard_DS4_v2 --admin-username $userName --generate-ssh-keys --nics ANNic$c
+az vm create -g $rgName -n $vmName --image $vmImage --size $vmsize --admin-username $userName --generate-ssh-keys --nics ANNic$c
 
 done
