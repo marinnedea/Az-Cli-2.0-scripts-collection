@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# You have to be logged in to run this.
+# You have to be logged in to AzCli to run this.
 
 # az login
 
@@ -21,6 +21,7 @@ else
 		sID=$h;
 		# Set subscriptionID:
 		az account set --subscription $sID
+		echo "Subscription: $sID set"
 
 		# List all resource groups
 		declare -a rgarray="$(az group list  --query '[].name' -o tsv)"
@@ -32,7 +33,7 @@ else
 		else
 			for  i in ${rgarray[@]};  do
 			rgName=$i;
-			
+			echo "ResourceGroup is: $rgName"
 				# List all VMs for RG $rgName
 				declare -a vmarray="$(az vm list -g $rgName --query '[].name' -o tsv)"
 
@@ -62,6 +63,8 @@ else
 							  --name customScript \
 							  --publisher Microsoft.Azure.Extensions \
 							  --protected-settings '{"fileUris": ["https://raw.githubusercontent.com/marinnedea/scripts/master/uuidfstab.bash"],"commandToExecute": "chmod +x uuidfstab.bash && ./uuidfstab.bash /etc/fstab"}'
+							  
+						echo "Updated fstab entries in VM: $vmName"
 						fi
 						
 						# Stop / Deallocating back the VMs that were in Deallocated state before applying the changes:
