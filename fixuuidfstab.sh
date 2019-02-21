@@ -5,9 +5,11 @@
 # az login
 
 # The script will iterate through all subscriptions, identify which VMs are 
-# running Linux, if they are deallocated will start them, apply the script, 
-# and set back the power status for the deallocated VMs.
-# For the VMs that were already powered ON, it will only apply the script.
+# running Linux and have disks attached; if the VMs are deallocated, the script
+# will check if the VM is generalized (prepared to become an image). If the VM  
+# is not generalized, the script will start the VM, apply the fix than stop the
+# VM back.
+# For the VMs that were already powered ON, it will only apply the fix.
 
 
 # To run this, just:
@@ -25,18 +27,20 @@ function fix_uuids(){
         echo "Updated fstab entries in VM: $vmName"
 }
 
-
+# List all your subscriptions
 declare -a sidarray="$(az account list --query [].id -o tsv)"
 if [ -z "$sidarray" ]; then
         echo "No subscriptions IDs available. Stopping here."
         exit 0
 else
+	#for each subscription
         for i in ${sidarray[@]};  do
                 sID=$i;
                 # Set subscriptionID:
                 az account set -s $sID
                 echo "Subscription: $sID set."
-
+		
+		# List all VMs in subscription
                 declare -a vmsdetails="$(az vm list -d --query '[].{Name:name, OS:storageProfile.osDisk.osType, Power:powerState, RG:resourceGroup}' -o tsv)"
 
                 printf '%s\n' "${vmsdetails[*]}" | while read line; do
