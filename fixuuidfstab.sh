@@ -9,73 +9,91 @@
 # and set back the power status for the deallocated VMs.
 # For the VMs that were already powered ON, it will only apply the script.
 
+
 # To run this, just:
 # chmod +x fixuuidfstab.sh && ./fixuuidfstab.sh
 
+# Function to trigger the fix
+function fix_uuids(){
+        az vm extension set \
+        --resource-group $vmRGName \
+        --vm-name $vmName \
+        --name customScript \
+        --publisher Microsoft.Azure.Extensions \
+        --protected-settings '{"fileUris": ["https://raw.githubusercontent.com/marinnedea/scripts/master/uuidfstab.bash"],"commandToExecute": "chmod +x uuidfstab.bash && ./uuidfstab.bash /etc/fstab"}'
 
-declare -a sidarray="$(az account list --o tsv | awk '{printf $2 "\n"}')"
+        echo "Updated fstab entries in VM: $vmName"
+}
+
+
+declare -a sidarray="$(az account list --query [].id -o tsv)"
 if [ -z "$sidarray" ]; then
-	echo "No subscriptions IDs available" 				
+        echo "No subscriptions IDs available. Stopping here."
+        exit 0
 else
-	for  h in ${sidarray[@]};  do
-		sID=$h;
-		# Set subscriptionID:
-		az account set --subscription $sID
-		echo "Subscription: $sID set"
+        for i in ${sidarray[@]};  do
+                sID=$i;
+                # Set subscriptionID:
+                az account set -s $sID
+                echo "Subscription: $sID set."
 
-		# List all resource groups
-		declare -a rgarray="$(az group list  --query '[].name' -o tsv)"
+                declare -a vmsdetails="$(az vm list -d --query '[].{Name:name, OS:storageProfile.osDisk.osType, Power:powerState, RG:resourceGroup}' -o tsv)"
 
-		#check if array is empty
-		if [ -z "$rgarray" ]; then
-			echo "No resource group in this subscription: $sID"
-			exit
-		else
-			for  i in ${rgarray[@]};  do
-			rgName=$i;
-			echo "ResourceGroup is: $rgName"
-				# List all VMs for RG $rgName
-				declare -a vmarray="$(az vm list -g $rgName --query '[].name' -o tsv)"
+                printf '%s\n' "${vmsdetails[*]}" | while read line; do
 
-				#check if array is empty
-				if [ -z "$vmarray" ]; then
-						echo "No VM in $rgName" 				
-				else							
-					for j in ${vmarray[@]}; do
-					vmName=$j;	
-					
-					# Make sure the VM running
-					vm_state="$(az vm show -g $rgName -n $vmName -d --query powerState -o tsv)"
+                        vmName="$(echo $line | awk '{print $1}')"
+                        vmOSType="$(echo $line | awk '{print $2}')"
+                        vmpowerState="$(echo $line | awk '{print $4}')"
+                        vmRGName="$(echo $line | awk '{print $5}')"
 
-						if [[ "$vm_state" != "VM running" ]] ; then
-							echo "Starting VM: $vmName "
-							az vm start -g $rgName -n $vmName
-						fi
-								
-						# Get the Operating System
-						vm_os="$(az vm get-instance-view -g $rgName -n $vmName | grep -i osType| awk -F '"' '{printf $4 "\n"}')"
-						
-						if [[ "$vm_os" == "Linux" ]] ; then			
-						#OS = Linux 					
-						az vm extension set \
-							  --resource-group $rgName \
-							  --vm-name $vmName \
-							  --name customScript \
-							  --publisher Microsoft.Azure.Extensions \
-							  --protected-settings '{"fileUris": ["https://raw.githubusercontent.com/marinnedea/scripts/master/uuidfstab.bash"],"commandToExecute": "chmod +x uuidfstab.bash && ./uuidfstab.bash /etc/fstab"}'
-							  
-						echo "Updated fstab entries in VM: $vmName"
-						fi
-						
-						# Stop / Deallocating back the VMs that were in Deallocated state before applying the changes:
-						if [[ "$vm_state" != "VM running" ]] ; then
-							echo "Stopping back: $vmName "
-							az vm stop -g $rgName -n $vmName
-						fi
-						
-				done
-			fi
-		done  
-	fi
-done
+                        echo "Found VM $vmName in Resource Group $vmRGName."
+                        echo "The VM is running $vmOSType."
+                        echo "The Vm Power State is: $vmpowerState."
+
+                        if [[ "$vmOSType" == "Linux" ]] ; then
+
+                                declare -a datadisks="$(az vm show  -g $vmRGName -n $vmName --query storageProfile.dataDisks[*] -o tsv)"
+
+                                #If datadisks array not empty
+                                if [ ! -z "$datadisks" ]; then
+
+                                        if [[ "$vmpowerState" != "running" ]] ; then
+
+                                                echo "Finding out if VM $vmName is generalized."
+                                                generalizedStat="$(az vm get-instance-view  -g $vmRGName -n $vmName --query 'instanceView.statuses[0].displayStatus' -o tsv)"
+
+                                                if [[ "$generalizedStat" != "VM generalized" ]] ; then
+
+                                                        echo "VM $vmName not generalized. Starting it up."
+                                                        az vm start -g $vmRGName -n $vmName
+
+                                                        echo "VM $vmName power state is: running. Applying fix."
+                                                        #Calling the function to run the fix UUIDs script:
+                                                        fix_uuids
+
+                                                        echo "VM $vmName reverted back to deallocated status."
+							az vm stop -g $vmRGName -n $vmName
+
+                                                else
+
+                                                        echo "$vmName is generalized. No operations possible on it. Skipping!"
+
+                                                fi
+                                        else
+                                                echo "VM $vmName power state is: running. Applying fix."
+                                                #Calling the function to run the fix UUIDs script:
+                                                fix_uuids
+
+                                        fi
+                                else
+                                        # datadisks array is empty
+                                        echo "VM $vmName has no data disk attached. Skipping!"
+                                fi
+                        else
+                                echo "VM $vmName is not running Linux. Skipping."
+                        fi
+                done
+        done
 fi
+exit 0
+
