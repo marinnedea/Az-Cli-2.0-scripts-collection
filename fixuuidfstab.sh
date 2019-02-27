@@ -34,70 +34,57 @@ if [ -z "$sidarray" ]; then
         exit 0
 else
 	#for each subscription
-        for i in ${sidarray[@]};  do
-                sID=$i;
-                # Set subscriptionID:
-                az account set -s $sID
-                echo "Subscription: $sID set."
+	for i in ${sidarray[@]};  do
+		sID=$i;
+		# Set subscriptionID:
+		az account set -s $sID
+		echo "Subscription: $sID set."
+
+		# List all VMs in subscription that are running Linux and have data disks attached
+		declare -a vmsdetails="$(az vm list --query "[?not_null(storageProfile.dataDisks[])]|[?storageProfile.osDisk.osType=='Linux'].{Name:name, Power:powerState, RG:resourceGroup}" -d -o tsv)"
 		
-		# List all VMs in subscription
-                declare -a vmsdetails="$(az vm list -d --query '[].{Name:name, OS:storageProfile.osDisk.osType, Power:powerState, RG:resourceGroup}' -o tsv)"
+		if [ ! -z "$vmsdetails" ]; then
+		
+			printf '%s\n' "${vmsdetails[*]}" | while read line; do
 
-                printf '%s\n' "${vmsdetails[*]}" | while read line; do
+				vmName="$(echo $line | awk '{print $1}')"                      
+				vmpowerState="$(echo $line | awk '{print $3}')"
+				vmRGName="$(echo $line | awk '{print $4}')"
 
-                        vmName="$(echo $line | awk '{print $1}')"
-                        vmOSType="$(echo $line | awk '{print $2}')"
-                        vmpowerState="$(echo $line | awk '{print $4}')"
-                        vmRGName="$(echo $line | awk '{print $5}')"
+				# echo "Found VM $vmName in Resource Group $vmRGName."                       
+				# echo "The Vm Power State is: $vmpowerState."                     
+				
+				echo "Finding out if VM $vmName is generalized."
+				generalizedStat="$(az vm get-instance-view  -g $vmRGName -n $vmName --query 'instanceView.statuses[0].displayStatus' -o tsv)"
 
-                        echo "Found VM $vmName in Resource Group $vmRGName."
-                        echo "The VM is running $vmOSType."
-                        echo "The Vm Power State is: $vmpowerState."
+				if [[ "$generalizedStat" != "VM generalized" ]] ; then
+					echo "VM $vmName not generalized"
+					if [[ "$vmpowerState" != "running" ]] ; then
 
-                        if [[ "$vmOSType" == "Linux" ]] ; then
+				
+						echo "VM $vmName powered-off. Starting it up."
+						az vm start -g $vmRGName -n $vmName
+					
+					fi				
+					
+					echo "VM $vmName power state is: running. Applying fix."
+					#Calling the function to run the fix UUIDs script:
+					fix_uuids
 
-                                declare -a datadisks="$(az vm show  -g $vmRGName -n $vmName --query storageProfile.dataDisks[*] -o tsv)"
+					if [[ "$vmpowerState" != "running" ]] ; then
 
-                                #If datadisks array not empty
-                                if [ ! -z "$datadisks" ]; then
+						echo "VM $vmName reverted back to deallocated status."
+						az vm stop -g $vmRGName -n $vmName
 
-                                        if [[ "$vmpowerState" != "running" ]] ; then
+					fi
 
-                                                echo "Finding out if VM $vmName is generalized."
-                                                generalizedStat="$(az vm get-instance-view  -g $vmRGName -n $vmName --query 'instanceView.statuses[0].displayStatus' -o tsv)"
+				else
 
-                                                if [[ "$generalizedStat" != "VM generalized" ]] ; then
+					echo "$vmName is generalized. No operations possible on it. Skipping!"
 
-                                                        echo "VM $vmName not generalized. Starting it up."
-                                                        az vm start -g $vmRGName -n $vmName
-
-                                                        echo "VM $vmName power state is: running. Applying fix."
-                                                        #Calling the function to run the fix UUIDs script:
-                                                        fix_uuids
-
-                                                        echo "VM $vmName reverted back to deallocated status."
-							az vm stop -g $vmRGName -n $vmName
-
-                                                else
-
-                                                        echo "$vmName is generalized. No operations possible on it. Skipping!"
-
-                                                fi
-                                        else
-                                                echo "VM $vmName power state is: running. Applying fix."
-                                                #Calling the function to run the fix UUIDs script:
-                                                fix_uuids
-
-                                        fi
-                                else
-                                        # datadisks array is empty
-                                        echo "VM $vmName has no data disk attached. Skipping!"
-                                fi
-                        else
-                                echo "VM $vmName is not running Linux. Skipping."
-                        fi
-                done
-        done
+				fi                       
+			done
+		fi
+	done
 fi
 exit 0
-
