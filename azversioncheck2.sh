@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 #########################################################################################################
 # Title:  	Find Windows Azure Agent version on all VMs in all subscriptions 	                #
