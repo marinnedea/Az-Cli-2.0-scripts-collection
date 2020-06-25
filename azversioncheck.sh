@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 #########################################################################################################
-# Title:  	Find Windows Azure Agent version on all VMs in all subscriptions 	                                #
-# Author: 	Marin Nedea																					#
-# Created: 	June 24th, 2020																		        #
-# Usage:  	Just run the script with sh (e.g. sh script.sh)   		                             		#
-# Requires:	AzCli 2.0 installed on the machine you're running this script on							#
-# 					https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest	#
-# 					If enabled, you can run it through the bash Cloud Shell in your Azure Portal page.	#
+# Title:  	Find Windows Azure Agent version on all VMs in all subscriptions 	                #
+# Author: 	Marin Nedea										#
+# Created: 	June 24th, 2020								       		#
+# Usage:  	Just run the script with sh (e.g. sh script.sh) 	                 		#
+# Requires:	AzCli 2.0 installed on the machine you're running this script on			#
+# 		https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest	#
+# 		If enabled, you can run it through the bash Cloud Shell in your Azure Portal page.	#
 #########################################################################################################
 
 echo "DISCLAIMER: 
