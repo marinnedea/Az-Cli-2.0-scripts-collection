@@ -25,7 +25,7 @@ echo "Script starting"
 # CSV file:
 csv_file=/tmp/azagentversion.csv
 backup_file=tmp/azagentversion.$(date +"%m-%d-%Y_%T" ).BKP.csv
-csv_header="Subscription;ResourceGroup;VM Name;VM Power Status;OS type;Agent version"
+csv_header="Subscription;ResourceGroup;VM Name;VM Power Status;OS type; Distribution;Agent version"
 
 # Create the csv file if does not exists; backup and create if already exist.
 if [ ! -f $csv_file ]
@@ -97,6 +97,10 @@ for subs in $(az account list -o tsv | awk '{print $3}'); do
 					osversion="$(az vm get-instance-view -g $rgName -n $vmName | grep -i osType| awk -F '"' '{printf $4 "\n"}')"
 					echo "--- OS: $osversion"
 					
+					distroname=$(az vm  get-instance-view  --resource-group ${rgName} --name ${vmName} --query instanceView -o tsv | awk '{print $7}')					
+					distrovers=$(az vm  get-instance-view  --resource-group ${rgName} --name ${vmName} --query instanceView -o tsv | awk '{print $8}')
+					echo "--- Distribution: $distroname $distrovers"
+					
 					vmState="$(az vm show -g $rgName -n $vmName -d --query powerState -o tsv)"
 					echo "--- VM Power state: $vmState"
 					
@@ -106,7 +110,7 @@ for subs in $(az account list -o tsv | awk '{print $3}'); do
 					echo "--- Windows Agent version: $agentversion"
 					
 					# Addding the necessary info to the CSV file. 
-					echo "$subs;$rgName;$vmName;$vmState;$osversion;$agentversion" >> $csv_file
+					echo "$subs;$rgName;$vmName;$vmState;$osversion;$distroname $distrovers;$agentversion" >> $csv_file
 					echo ""
 					echo ""
 				done
